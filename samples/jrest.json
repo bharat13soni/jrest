@@ -1,0 +1,17 @@
+{
+	"AUTH":{
+		"Query":"Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);"
+	}
+}	
+!
+{
+	
+	"JDBC":{
+		"Host":"localhost",
+		"Port":"3306",
+		"User":"root",
+		"Pass":"xmc4vhcf",
+		"Db":"Darwin",
+		"Type":"MySql"
+	}
+}

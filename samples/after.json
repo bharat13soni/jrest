@@ -1,0 +1,13 @@
+{
+
+	"AfterJSON" : {
+		"Query" : "Select username, name, password From Darwin.User;",
+		"Type" : "GET",
+		"After" : {
+					 "FQCN" : "CustomBeforeAfter",
+					 "Method" : "AfterMethod"
+					},
+		"Roles" : ["1", "2", "3", "4", "5"]
+	}
+}
+

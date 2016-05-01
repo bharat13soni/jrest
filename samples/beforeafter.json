@@ -1,0 +1,30 @@
+{
+
+	"UA3" : {
+		"Query" : "Select username, name, password From Darwin.User;",
+		"Type" : "GET",
+		"After" : {
+					 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+					 "Method" : "sayHelloAfter"
+					}
+	}
+}
+
+!
+
+{
+
+	"UA4" : {
+		"Query" : "Select username, name, password From Darwin.User;",
+		"Type" : "GET",
+		"Before" : {
+					 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+					 "Method" : "sayHelloBefore",
+					 "Consume" : "t"
+					},
+		"After" : {
+					 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+					 "Method" : "sayHelloAfter"
+					}
+	}
+}

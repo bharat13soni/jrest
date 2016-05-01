@@ -1,0 +1,17 @@
+{
+
+	"Users" : {
+		"Query" : "Select username, name, password From Darwin.User;",
+		"Type" : "GET"
+
+	}
+}
+!
+{
+	"SpecificUser" : {
+		"Query" : "Select username, name, password From Darwin.User WHERE name = ?;",
+		"Type" : "GET"
+
+	} 
+
+}
