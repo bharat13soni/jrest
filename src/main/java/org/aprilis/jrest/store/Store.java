@@ -37,13 +37,9 @@ public class Store {
 
 	moAuthenticationDefinition = new Definition();
 	moConnectionDefinition = null;
-	msDownloadPath = null;
 
 	mhmapGetDefinitions = new HashMap< String, Definition >();
 	mhmapSetDefinitions = new HashMap< String, Definition >();
-	mhmapUploadDefinitions = new HashMap< String, Definition >();
-	mhmapDownloadDefinitions = new HashMap< String, Definition >();
-
   }/* private Store() */
 
   /**
@@ -126,73 +122,6 @@ public class Store {
 
   /**
    * 
-   * @param sDefinitionName
-   * @param oDefinition
-   */
-  public void addUploadDefinition(String sDefinitionName, Definition oDefinition) {
-	synchronized( moLock ) {
-	  if( sDefinitionName != null && oDefinition != null ) {
-		if( mhmapUploadDefinitions.containsKey( sDefinitionName ) ) {
-		  mLogger
-			  .debug( String.format( Exceptions.gsDefinitionReplaced, sDefinitionName ) );
-		  mLogger
-			  .warn( String.format( Exceptions.gsDefinitionReplaced, sDefinitionName ) );
-		}// if (mhmapUploadDefinitions.containsKey(sDefinitionName))
-
-		mhmapUploadDefinitions.put( sDefinitionName, oDefinition );
-	  }// if (sDefinitionName != null && oDefinition != null)
-	}// synchronized (moLock)
-  }/*
-    * public void addUploadDefinition(String sDefinition, Definition
-    * oDefinition)
-    */
-
-  /**
-   * 
-   * @param sDefinitionName
-   * @return
-   */
-  public Definition getUploadDefinition(String sDefinitionName) {
-	return mhmapUploadDefinitions.get( sDefinitionName );
-  }/* public Definition getUploadDefinition(String sDefinitionName) */
-
-  /**
-   * 
-   * @param sDefinitionName
-   * @param oDefinition
-   */
-  public void addDownloadDefinition(String sDefinitionName, Definition oDefinition) {
-	synchronized( moLock ) {
-	  if( sDefinitionName != null && oDefinition != null ) {
-		if( mhmapDownloadDefinitions.containsKey( sDefinitionName ) ) {
-		  mLogger
-			  .debug( String.format( Exceptions.gsDefinitionReplaced, sDefinitionName ) );
-		  mLogger
-			  .warn( String.format( Exceptions.gsDefinitionReplaced, sDefinitionName ) );
-		}// if (mhmapDownloadDefinitions.containsKey(sDefinitionName))
-
-		mhmapDownloadDefinitions.put( sDefinitionName, oDefinition );
-	  }// if (sDefinitionName != null && oDefinition != null)
-	}// synchronized (moLock)
-  }/*
-    * public void addDownloadDefinition(String sDefinition, Definition
-    * oDefinition)
-    */
-
-  public Definition getDownloadDefinition(String sDefinitionName) {
-	return mhmapDownloadDefinitions.get( sDefinitionName );
-  }/* public Definition getDownloadDefinition(String sDefinitionName) */
-
-  public void setDownloadPath(String sPath) {
-	msDownloadPath = sPath;
-  }/* public void setDownloadPath(String sPath) */
-
-  public String getDownloadPath() {
-	return msDownloadPath;
-  }/* public String getDownloadPath() */
-
-  /**
-   * 
    * @param sConnectionString
    */
   public void setJdbcConnectionDetails(ConnectionDetails oConnection) {
@@ -249,8 +178,6 @@ public class Store {
   public void clearAllDefinitions() {
 	mhmapGetDefinitions.clear();
 	mhmapSetDefinitions.clear();
-	mhmapUploadDefinitions.clear();
-	mhmapDownloadDefinitions.clear();
 
 	moAuthenticationDefinition.setQuery( null );
 	moAuthenticationDefinition.setDelimiter( Constants.gcDefaultAuthDelimiter );
@@ -268,22 +195,6 @@ public class Store {
    * Container into which all the GET type of requests are stored
    */
   private HashMap< String, Definition > mhmapGetDefinitions;
-
-  /**
-   * Container into which all the upload type of requests are stored
-   */
-  private HashMap< String, Definition > mhmapUploadDefinitions;
-
-  /**
-   * Container into which all the download type of requests are stored
-   */
-  private HashMap< String, Definition > mhmapDownloadDefinitions;
-
-  /**
-   * Path variable that contains the absolute path of files that can be
-   * downloaded.
-   */
-  private String msDownloadPath;
 
   /**
    * Container into which all the PUT/POST type of request are stored

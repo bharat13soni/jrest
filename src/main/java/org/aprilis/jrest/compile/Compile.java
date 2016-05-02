@@ -102,6 +102,9 @@ public class Compile extends Thread {
    */
   private boolean initialize() {
 	try {
+	  mLogger.debug( msPathToDefinitionFiles + " << initialize >> "
+		  + System.getenv( Constants.gsPathVariable ) );
+
 	  if( msPathToDefinitionFiles
 		  .equals( System.getenv( Constants.gsPathVariable ) ) == false ) {
 		msPathToDefinitionFiles = System.getenv( Constants.gsPathVariable );
@@ -143,9 +146,6 @@ public class Compile extends Thread {
 
 		msPathToJrestRepo = mfDefinitionFile.getAbsolutePath();
 	  } // if(msPathToDefinitionFiles.equals(System.getenv(Constants.gsPathVariable))
-
-	  String msDownloadPath = System.getenv( Constants.gsDownloadPathVariable );
-	  moStore.setDownloadPath( msDownloadPath );
 
 	  msJrestSweepInterval = System.getenv( Constants.gsRefreshInterval );
 
@@ -572,80 +572,13 @@ public class Compile extends Thread {
 			loadRoles( jsonEntry.getKey(), (JSONObject) jsonEntry.getValue(),
 				apiDefinition );
 
-			/*
-			 * Upload and download related values handling
-			 */
-			if( jsonEntry.getValue().containsKey( Constants.gsLangFileType ) ) {
-
-			  String fileType = (String) jsonEntry.getValue()
-				  .get( Constants.gsLangFileType );
-			  if( sQueryType.equals( Constants.gsLangDefTypeUpload ) ) {
-				if( fileType.equals( Constants.gsImageType ) ) {
-				  apiDefinition.setFileType( fileType );
-				} else {
-				  mLogger.error( Exceptions.gsInvalidUploadFileType );
-
-				  return false;
-				} // if (fileType.equals(Constants.gsImageType))
-			  } else if( sQueryType.equals( Constants.gsLangDefTypeDownload ) ) {
-				if( fileType.equals( Constants.gsPDFType )
-					|| ( fileType.equals( Constants.gsEPubType ) ) ) {
-				  apiDefinition.setFileType( fileType );
-				} else {
-				  mLogger.error( Exceptions.gsInvalidDownloadFileType );
-
-				  return false;
-				} // if (fileType.equals(Constants.gsPDFType) || ...)
-			  } // if (sQueryType.equals(Constants.gsLangDefTypeUpload))
-
-			} // if (jsonEntry.getValue().containsKey(Constants.gsLangFileType))
-
-			if( jsonEntry.getValue().containsKey( Constants.gsLangFilePath ) ) {
-			  apiDefinition.setFilePath(
-				  (String) jsonEntry.getValue().get( Constants.gsLangFilePath ) );
-			} // if (jsonEntry.getValue().containsKey(Constants.gsLangFilePath))
-
-			if( jsonEntry.getValue().containsKey( Constants.gsLangGenerateFileName ) ) {
-
-			  String strGenerateFileNameValue = (String) jsonEntry.getValue()
-				  .get( Constants.gsLangGenerateFileName );
-
-			  if( strGenerateFileNameValue.equals( Constants.gsYes ) ) {
-				apiDefinition.setGenerateFileName( true );
-			  } else if( strGenerateFileNameValue.equals( Constants.gsNo ) ) {
-				apiDefinition.setGenerateFileName( false );
-			  } else {
-				mLogger.error( Exceptions.gsInvalidGenerateValue );
-
-				return false;
-			  } // if (strGenerateFileNameValue == Constants.gsYes)
-			} // if
-			  // (jsonEntry.getValue().containsKey(Constants.gsLangGenerateFileName))
-
-			/*
-			 * Download type definitions processing considers following keys:
-			 * FileType key should be present. Query is optional. If query is
-			 * present, filename header param will not be considered. Query
-			 * should return a string filename. FileName header param will be
-			 * considered only when NO Query is configured for a download
-			 * definition. Downloadable File should be present in the
-			 * $JREST_DOWNLOAD_PATH. Roles is mandatory.
-			 */
-
 			// 6. Check for value of keyword Type is either GET or SET or Upload
-			// or
-			// Download - Done
-			//
 			if( sQueryType != null ) {
 			  if( sQueryType.equals( Constants.gsLangDefTypeGet ) ) {
 				moStore.addGetDefinition( jsonEntry.getKey(), apiDefinition );
 			  } else if( sQueryType.equals( Constants.gsLangDefTypeSet ) ) {
 				moStore.addSetDefinition( jsonEntry.getKey(), apiDefinition );
-			  } else if( sQueryType.equals( Constants.gsLangDefTypeUpload ) ) {
-				moStore.addUploadDefinition( jsonEntry.getKey(), apiDefinition );
-			  } else if( sQueryType.equals( Constants.gsLangDefTypeDownload ) ) {
-				moStore.addDownloadDefinition( jsonEntry.getKey(), apiDefinition );
-			  } else {
+			  }  else {
 				mLogger.error( Exceptions.gsInvalidDefinitionTypeGiven );
 
 				return false;

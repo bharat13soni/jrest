@@ -453,22 +453,6 @@ public class Constants {
 
   public static final short gshBufferSize = 4096;
 
-  public static final String gsImageType = "IMG";
-  public static final String gsPDFType = "PDF";
-  public static final String gsEPubType = "EPUB";
-
-  public static final String gsLangDefTypeUpload = "UPLOAD";
-  public static final String gsLangFileType = "FileType";
-  public static final String gsLangFilePath = "Path";
-  public static final String gsLangGenerateFileName = "Generate";
-  public static final String gsYes = "y";
-  public static final String gsNo = "n";
-
-  public static final String gsLangDefTypeDownload = "DOWNLOAD";
-  public static final String gsDownloadPathVariable = "JREST_DOWNLOAD_PATH";
-
   public static final short gshDefTypeSet = 0;
   public static final short gshDefTypeGet = 1;
-  public static final short gshDefTypeDownload = 2;
-
 }/* public class Constants */

@@ -95,7 +95,7 @@ public class Exceptions {
 	  + "missing mandatory keywords 'Query' or 'Type'";
 
   public static final String gsInvalidDefinitionTypeGiven = "Found wrong access type in the definition file."
-	  + " Valid access types are 'GET' or 'SET' or 'UPLOAD' or 'DOWNLOAD'";
+	  + " Valid access types are 'GET' or 'SET'";
 
   public static final String gsInvalidFunctionNameGiven = "Very short function found; please specify a fully "
 	  + "qualified function name e.g. org.aprilis.jrest.Compiler.PrepareLexTree";
@@ -179,13 +179,4 @@ public class Exceptions {
   public static final String gsCreateExecutorPool = "Creating executor pool on slot [%d]";
 
   public static final String gsInvalidGenerateValue = "Invalid value given for Generate clause. Valid set is y or n";
-
-  public static final String gsInvalidUploadFileType = "Invlid upload file type given. Valid set is 'IMG'";
-
-  public static final String gsInvalidDownloadFileType = "Invlid download file type given. Valid set is 'PDF'";
-
-  public static final String gsDownloadPathNotConfigured = "Download path not configured. Please configure JREST_DOWNLOAD_PATH to point to a valid directory.";
-
-  public static final String gsDownloadFileNotFound = "Download file not found in JREST_DOWNLOAD_PATH. Please verify if the file exists and JRest has adequate permissions";
-
 }/* public class Exceptions */

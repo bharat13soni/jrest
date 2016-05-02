@@ -63,9 +63,6 @@ public class QueryBinder {
 	  case Constants.gshDefTypeGet:
 		moDefinition = moDefinitionStore.getDefinition( sJrestKey, true );
 		break;
-	  case Constants.gshDefTypeDownload:
-		moDefinition = moDefinitionStore.getDownloadDefinition( sJrestKey );
-		break;
 	}
 
 	if( moDefinition != null ) {
