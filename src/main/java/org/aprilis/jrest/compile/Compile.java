@@ -289,7 +289,9 @@ public class Compile extends Thread {
   @SuppressWarnings("unchecked")
   private boolean loadJrestDefinition(String sJsonDef) {
 	try {
-	  String newLineTrimmedJson = sJsonDef.replaceAll( Constants.gsTrimFindeString,
+	  String commentsStrippedJson = sJsonDef
+		  .replaceAll( Constants.gsStripCommentLineRegEx, Constants.gsEmptyString );
+	  String newLineTrimmedJson = commentsStrippedJson.replaceAll( Constants.gsTrimFindeString,
 		  Constants.gsEmptyString );
 	  String spaceRemovedJson = newLineTrimmedJson
 		  .replaceAll( Constants.gsRemoveSpacesExcludingQuotes, Constants.gsEmptyString );

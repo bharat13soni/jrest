@@ -85,84 +85,84 @@ public class Authentication {
 	  if( jsonData != null && jsonData.length() > Constants.gshMinJsonDataLength ) {
 		String sqlQuery = moQueryBinder.buildQueryForAuth( jsonData );
 
-		if( sqlQuery == null ) {
+		if( sqlQuery != null ) {
+		  mLogger.debug( sqlQuery );
+
+		  moExecutor = moExecutionEngine.acquireExecutorFromPool();
+
+		  if( moExecutor != null ) {
+			ResultSet rsRoles = moExecutor.executeQuery( sqlQuery );
+
+			if( rsRoles == null ) {
+			  mLogger.fatal(
+				  String.format( Exceptions.gsBadQueryOrDatabaseGone, sqlQuery ) );
+
+			  moExecutionEngine.releaseExecutorToPool( moExecutor );
+
+			  return Response.status( HttpCodes.INTERNAL_SERVER_ERROR )
+				  .entity(
+					  String.format( Exceptions.gsBadQueryOrDatabaseGone, sqlQuery ) )
+				  .build();
+			}// if (rsRoles == null)
+
+			HashSet< String > hsetRoles = new HashSet< String >();
+
+			if( moStore.getAuthenticationDefinition()
+				.getDelimiter() != Constants.gcDefaultAuthDelimiter ) {
+			  /*
+			   * We have a delimiter on which we need to parse over the result
+			   * set
+			   */
+			  while( rsRoles.next() ) {
+				// Split the zeroth index column on the set delimiter and
+				String roles[] = rsRoles.getString( Constants.gshColumnStartIndex )
+					.split( String.valueOf(
+						moStore.getAuthenticationDefinition().getDelimiter() ) );
+
+				for( short roleIndex = 0; roleIndex < roles.length; roleIndex++ ) {
+				  hsetRoles.add( roles[roleIndex].trim() );
+				}// for (short roleIndex = 0; roleIndex < roles.length;
+				 // roleIndex++)
+			  }// while(rsRoles.next())
+			} else {
+			  /*
+			   * We dont have a delimiter which means either user has selected
+			   * no role based authentication or multiple roles in the form of
+			   * individual rows.
+			   */
+			  while( rsRoles.next() ) {
+				hsetRoles
+					.add( rsRoles.getString( Constants.gshColumnStartIndex ).trim() );
+			  }// while (rsRoles.next())
+			}// if (moStore.getAuthenticationDefinition().getDelimiter()
+
+			rsRoles.close();
+			moExecutionEngine.releaseExecutorToPool( moExecutor );
+
+			rsRoles = null;
+			moExecutor = null;
+
+			if( hsetRoles.size() > Constants.gshZero ) {
+			  String sessionKey = moSessionStore.registerSession( hsetRoles );
+
+			  return Response
+				  .status( HttpCodes.OK ).entity( String
+					  .format( Constants.gsSessionKeyJsonFormat, sessionKey ).toString() )
+				  .build();
+			} else {
+			  mLogger.debug( Exceptions.gsNoRolesAssignedToUser );
+
+			  return Response.status( HttpCodes.UNAUTHORIZED )
+				  .entity( Exceptions.gsNoRolesAssignedToUser ).build();
+			}// if (hsetRoles.size() > Constants.gshZero)
+		  }// if (moExecutor != null)
+		} else {
 		  mLogger.error( Exceptions.gsUnProcessableQuery );
 
 		  return Response.status( HttpCodes.UNPROCESSABLE_ENTITY )
 			  .entity( Exceptions.gsUnProcessableQuery ).build();
-		}// if (sqlQuery == null)
-
-		mLogger.debug( sqlQuery );
-
-		moExecutor = moExecutionEngine.acquireExecutorFromPool();
-
-		if( moExecutor != null ) {
-		  ResultSet rsRoles = moExecutor.executeQuery( sqlQuery );
-
-		  if( rsRoles == null ) {
-			mLogger
-				.fatal( String.format( Exceptions.gsBadQueryOrDatabaseGone, sqlQuery ) );
-
-			moExecutionEngine.releaseExecutorToPool( moExecutor );
-
-			return Response.status( HttpCodes.INTERNAL_SERVER_ERROR )
-				.entity( String.format( Exceptions.gsBadQueryOrDatabaseGone, sqlQuery ) )
-				.build();
-		  }// if (rsRoles == null)
-
-		  HashSet< String > hsetRoles = new HashSet< String >();
-
-		  if( moStore.getAuthenticationDefinition()
-			  .getDelimiter() != Constants.gcDefaultAuthDelimiter ) {
-			/*
-			 * We have a delimiter on which we need to parse over the result set
-			 */
-			while( rsRoles.next() ) {
-			  // Split the zeroth index column on the set delimiter and
-			  String roles[] = rsRoles.getString( Constants.gshColumnStartIndex )
-				  .split( String
-					  .valueOf( moStore.getAuthenticationDefinition().getDelimiter() ) );
-
-			  mLogger.debug( roles );
-
-			  for( short roleIndex = 0; roleIndex < roles.length; roleIndex++ ) {
-				hsetRoles.add( roles[roleIndex].trim() );
-			  }// for (short roleIndex = 0; roleIndex < roles.length;
-			   // roleIndex++)
-			}// while(rsRoles.next())
-		  } else {
-			/*
-			 * We dont have a delimiter which means either user has selected no
-			 * role based authentication or multiple roles in the form of
-			 * individual rows.
-			 */
-			while( rsRoles.next() ) {
-			  hsetRoles.add( rsRoles.getString( Constants.gshColumnStartIndex ).trim() );
-			}// while (rsRoles.next())
-		  }// if (moStore.getAuthenticationDefinition().getDelimiter()
-
-		  rsRoles.close();
-		  moExecutionEngine.releaseExecutorToPool( moExecutor );
-		  
-		  rsRoles = null;
-		  moExecutor = null;
-
-		  if( hsetRoles.size() > Constants.gshZero ) {
-			String sessionKey = moSessionStore.registerSession( hsetRoles );
-
-			return Response
-				.status( HttpCodes.OK ).entity( String
-					.format( Constants.gsSessionKeyJsonFormat, sessionKey ).toString() )
-				.build();
-		  } else {
-			mLogger.debug( Exceptions.gsNoRolesAssignedToUser );
-
-			return Response.status( HttpCodes.UNAUTHORIZED )
-				.entity( Exceptions.gsNoRolesAssignedToUser ).build();
-		  }// if (hsetRoles.size() > Constants.gshZero)
-		}// if (moExecutor != null)
-	  }// if (jsonData != null && jsonData.length() >
-	   // Constants.gshMinJsonDataLength)
+		}
+	  }// if (sqlQuery == null)// if (jsonData != null && jsonData.length() >
 	} catch( Exception e ) {
 	  e.printStackTrace( moPrintWriter );
 
@@ -170,15 +170,13 @@ public class Authentication {
 	} finally {
 	  if( moExecutor != null ) {
 		moExecutionEngine.releaseExecutorToPool( moExecutor );
-		
+
 		moExecutor = null;
 	  }// if(moExecutor != null)
 	}// end of try .. catch block
 
 	return Response.status( HttpCodes.UNAUTHORIZED ).build();
-  }/*
-    * public Response login(String sessionKey, String jrestKey, String jsonData)
-    */
+  }// public Response login(String sessionKey, String jrestKey, String jsonData)
 
   /**
    * 

@@ -267,7 +267,7 @@ public class Constants {
    * Constant for One
    */
   public static final short gshOne = 1;
-
+  
   /**
    * Default number of max allowed database connections that the JREST is
    * allowed to pool itself with, if the guidline from developer is not set as
@@ -404,7 +404,7 @@ public class Constants {
   /**
    * 
    */
-  public static final short gshMinJsonDataLength = 16;
+  public static final short gshMinJsonDataLength = 9;
 
   /**
    * 

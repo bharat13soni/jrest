@@ -111,9 +111,6 @@ public class QueryBinder {
 	  // Length of the split array; size has been realigned
 	  short splitLength = (short) ( sSplitQuery.length - 1 );
 
-	  mLogger.debug( String.format( Exceptions.gsGivenToExpectedDataRatio, splitLength,
-		  hmapJsonData.size() ) );
-
 	  // Binder just checks whether there are sufficient number of parameters to
 	  // supply for the query that it is about to build. The user may pass more
 	  // number
@@ -172,8 +169,7 @@ public class QueryBinder {
 	if( sJsonData != null ) {
 	  String sTrimmedJsonData = sJsonData.trim();
 
-	  if( ( sTrimmedJsonData.length() > 0 )
-		  && ( sTrimmedJsonData.equals( Constants.DEFAULT_JSON_DATA ) == false ) ) {
+	  if( sTrimmedJsonData.length() > Constants.gshMinJsonDataLength ) {
 		return bindParamsAndBuildQuery( sTrimmedJsonData );
 	  }// if ((sTrimmedJsonData.length() > 0) ... )
 	}// if (sJsonData != null)

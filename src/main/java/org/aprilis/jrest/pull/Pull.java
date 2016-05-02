@@ -171,7 +171,6 @@ public class Pull {
 				 */
 				msSqlQuery = moQueryBinder.buildQueryForKey( jrestKey, jsonData,
 					Constants.gshDefTypeGet );
-
 			  } // if (jrestDefinition.getFqcnBefore() != null)
 
 			  if( msSqlQuery == null ) {
@@ -181,6 +180,8 @@ public class Pull {
 					.entity( Exceptions.gsUnProcessableQuery ).build();
 			  } // if (msSqlQuery == null)
 
+			  mLogger.debug( msSqlQuery );
+			  
 			  // Acquire executor handle from the pool engine
 			  moExecutor = moExecutionEngine.acquireExecutorFromPool();
 
@@ -255,7 +256,7 @@ public class Pull {
 				} else {
 				  mLogger.error( Exceptions.gsQueryResultedInNullSetMessage );
 
-				  return Response.status( HttpCodes.NO_CONTENT )
+				  return Response.status( HttpCodes.EXPECTATION_FAILED )
 					  .entity( Exceptions.gsQueryResultedInNullSet ).build();
 				} // if (moResultSet != null)
 			  } else {
