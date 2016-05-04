@@ -181,15 +181,15 @@ public class Pull {
 			  } // if (msSqlQuery == null)
 
 			  mLogger.debug( msSqlQuery );
-			  
+
 			  // Acquire executor handle from the pool engine
 			  moExecutor = moExecutionEngine.acquireExecutorFromPool();
 
 			  if( moExecutor != null ) {
-				// Trigger the query and check whether it was successful or not
-				moResultSet = moExecutor.executeQuery( msSqlQuery );
-
+				// Trigger the query and check whether it was successful or
+				// not
 				mLogger.debug( String.format( Exceptions.gsFormedSqlQuery, msSqlQuery ) );
+				moResultSet = moExecutor.executeQuery( msSqlQuery );
 
 				if( moResultSet != null && moResultSet.isBeforeFirst() ) {
 				  JSONArray jsonResultSet = new JSONArray();

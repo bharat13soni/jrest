@@ -102,9 +102,6 @@ public class Compile extends Thread {
    */
   private boolean initialize() {
 	try {
-	  mLogger.debug( msPathToDefinitionFiles + " << initialize >> "
-		  + System.getenv( Constants.gsPathVariable ) );
-
 	  if( msPathToDefinitionFiles
 		  .equals( System.getenv( Constants.gsPathVariable ) ) == false ) {
 		msPathToDefinitionFiles = System.getenv( Constants.gsPathVariable );
