@@ -13,14 +13,14 @@ We have developed a meta language with compiler called JRest that can be started
 JRest has mainly two flavors, full version i.e. authentication and session subsystem built into it and lite version without the session management; lite being a great choice if an application has its own mechanism of authentication and session management. 
 
 # 5 mins guide to lift off!
-1. Download the source code <br>
-2. Stop your web server now, if you are running one! we will start it back in 5 minutes <br>
-3. To compile the source, you must have Maven already installed along with Java <br>
-4. To generate the war file from source code, go to the j-rest folder and execute mvn install. This should generate the war file which you need to place it under the webapps folder of your webserver. <br>
-5. Set an environment variable by the name <b>JREST_DEFINITION_PATH</b> to any of your favorite path. Depending on your platform you may need to reopen/restart the shell/command prompt. <br>
-6. To work with Oracle and Sql Server you need to have their jdbc drivers installed and accessible on <b>CLASSPATH</b>. <br>
-7. Make sure you have/create a table called User on your database, with username and password columns present in them. <br>
-8. Now move into JREST_DEFINITION_PATH, and open a new file jrest.json in edit mode, and fill in the details given below (replace the values accordingly). <br>
+1. Download the source code
+2. Stop your web server now, if you are running one! we will start it back in 5 minutes
+3. To compile the source, you must have Maven already installed along with Java
+4. To generate the war file from source code, go to the j-rest folder and execute mvn install. This should generate the war file which you need to place it under the webapps folder of your webserver.
+5. Set an environment variable by the name <b>JREST_DEFINITION_PATH</b> to any of your favorite path. Depending on your platform you may need to reopen/restart the shell/command prompt
+6. To work with Oracle and Sql Server you need to have their jdbc drivers installed and accessible on <b>CLASSPATH</b>.
+7. Make sure you have/create a table called User on your database, with username and password columns present in them.
+8. Now move into JREST_DEFINITION_PATH, and open a new file jrest.json in edit mode, and fill in the details given below (replace the values accordingly)
     {
         "AUTH":{
               "Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"
@@ -28,8 +28,7 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
     }
     !
     {
-
-        "JDBC":{
+        "JDBC": {
                 "Host":"<hostname>",
                 "Port":"<database port>",
                 "User":"<username>",
@@ -40,12 +39,10 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
     }
 9. Now open another file users.json in edit mode in JREST_DEFINITION_PATH and put the contents given below <br>
     {
-
-          "Users" : {
-                  "Query" : "Select username, name, password From User;",
-                  "Type" : "GET"
-
-          }
+        "Users" : {
+            "Query" : "Select username, name, password From User;",
+            "Type" : "GET"
+        }
     }
 10. Now start your web server or execute mvn jetty:run on the shell prompt (you must be inside the j-rest directory where you have uncompressed the JRest source) <br>
 11. Observe the output of web server; your definition files must have loaded successfully. Your output should be something similar to following
