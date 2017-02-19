@@ -13,9 +13,6 @@ We have developed a meta language with compiler called JRest that can be started
 JRest has mainly two flavors, full version i.e. authentication and session subsystem built into it and lite version without the session management; lite being a great choice if an application has its own mechanism of authentication and session management. 
 
 # 5 mins guide to lift off!
-5 Minutes Guide</b>
-
-<para>
 1. Download the source code <br>
 2. Stop your web server now, if you are running one! we will start it back in 5 minutes <br>
 3. To compile the source, you must have Maven already installed along with Java <br>
@@ -24,7 +21,6 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
 6. To work with Oracle and Sql Server you need to have their jdbc drivers installed and accessible on <b>CLASSPATH</b>. <br>
 7. Make sure you have/create a table called User on your database, with username and password columns present in them. <br>
 8. Now move into JREST_DEFINITION_PATH, and open a new file jrest.json in edit mode, and fill in the details given below (replace the values accordingly). <br>
-
     {
         "AUTH":{
               "Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"
@@ -32,7 +28,7 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
     }
     !
     {
-        
+
         "JDBC":{
                 "Host":"<hostname>",
                 "Port":"<database port>",
@@ -42,52 +38,42 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
                 "Type":"MySql/PostgreSql/SQLServer/Oracle"
         }
     }
-
-<para>
 9. Now open another file users.json in edit mode in JREST_DEFINITION_PATH and put the contents given below <br>
-
     {
-  
+
           "Users" : {
                   "Query" : "Select username, name, password From User;",
                   "Type" : "GET"
-  
+
           }
     }
-
-    
-<para> 
 10. Now start your web server or execute mvn jetty:run on the shell prompt (you must be inside the j-rest directory where you have uncompressed the JRest source) <br>
 11. Observe the output of web server; your definition files must have loaded successfully. Your output should be something similar to following
-
-
-      2013-02-10 16:23:00,705 [Thread-6] DEBUG org.aprilis.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [UA4] <br>
-      2013-02-10 16:23:00,707 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"AUTH":{"Query":"Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);"}}] <br>
-      2013-02-10 16:23:00,708 [Thread-6] DEBUG org.aprilis.jrest.store.Store - Definition SQL Query is [Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);] <br>
-      2013-02-10 16:23:00,709 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"JDBC":{"Host":"localhost","Port":"3306","User":"root","Pass":"xmc4vhcf","Db":"Darwin","Type":"MySql"}}] <br>
-      2013-02-10 16:23:00,732 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"Users":{"Query":"Select username, name, password From Darwin.User;","Type":"GET"}}] <br>
-      2013-02-10 16:23:00,733 [Thread-6] DEBUG org.aprilis.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [Users] <br>
-      Feb 10, 2013 4:23:01 PM com.sun.jersey.api.core.PackagesResourceConfig init <br>
-      INFO: Scanning for root resource and provider classes in the packages: <br>
-      org.aprilis.jrest <br>
-      Feb 10, 2013 4:23:02 PM com.sun.jersey.api.core.ScanningResourceConfig logClasses <br>
-      INFO: Root resource classes found:  <br>
+    2013-02-10 16:23:00,705 [Thread-6] DEBUG org.aprilis.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [UA4] <br>
+    2013-02-10 16:23:00,707 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"AUTH":{"Query":"Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);"}}] <br>
+    2013-02-10 16:23:00,708 [Thread-6] DEBUG org.aprilis.jrest.store.Store - Definition SQL Query is [Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);] <br>
+    2013-02-10 16:23:00,709 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"JDBC":{"Host":"localhost","Port":"3306","User":"root","Pass":"xmc4vhcf","Db":"Darwin","Type":"MySql"}}] <br>
+    2013-02-10 16:23:00,732 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"Users":{"Query":"Select username, name, password From Darwin.User;","Type":"GET"}}] <br>
+    2013-02-10 16:23:00,733 [Thread-6] DEBUG org.aprilis.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [Users] <br>
+    Feb 10, 2013 4:23:01 PM com.sun.jersey.api.core.PackagesResourceConfig init <br>
+    INFO: Scanning for root resource and provider classes in the packages: <br>
+        org.aprilis.jrest <br>
+        Feb 10, 2013 4:23:02 PM com.sun.jersey.api.core.ScanningResourceConfig logClasses <br>
+        INFO: Root resource classes found:  <br>
         class org.aprilis.jrest.pull.Pull <br>
         class org.aprilis.jrest.push.Push <br>
         class org.aprilis.jrest.auth.Authentication <br>
-
-<para>
 12. Make sure you have Postman plugin for Google Chrome or REST Client extension for Firefox; this is needed to test the REST service. <br>
 13. Create a HTTP POST request with the URL http://localhost:8080/jrest/login and pass the authentication details in Header params with JSON_DATA as the key and {"1":"d", "2":"d"} as the value. <br>
 14. Pay attention to the header parameters; we have placed {"1":"d", "2":"d"} as JSON_DATA for the call. 1 and 2 in the actual JSON data represents the positions on the Query given as part of AUTH string ("Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);". The value "d" of key "1" is supplemented to username and "d" (another 'd') of key "2" is supplemented password of the SQL statement. <br>
 15. You should also get a session key of length 32 bytes as a reply to login; we need that key for every other call that we are going to make for JRest, keep it copied to some place.  <br>
 16. There you go! You have successfully interacted with your webserver using j-rest.  <br>
 17. On the same lines, execute other definitions. The information needed in case of definitions other than AUTH is that the HTTP request should contain the following information in the Header params <br>
-
-
-      JREST_KEY : Definition key
-      SESSION_KEY : Session key received from login HTTP request
-      JSON_DATA : Optional data to supply actual values to the query corresponding to the JREST_KEY as shown in the login example.
+    {
+    JREST_KEY : Definition key
+    SESSION_KEY : Session key received from login HTTP request
+    JSON_DATA : Any JSON data required by the definition
+    }
 
 # Design and Philosophy 
 JRest consists of a meta language compiler, session manager, execution engine, definition store and offers three types of HTTP interactions (auth, pull and push). JRest is case sensitive just like C or C++, hence definitions can mean differently with case changed.  Successfully compiled definition files are stored in memory within definition store and also a copy is maintained on the file system which is guided by $JREST_DEFINITION_PATH env variable. This path is used for reloading the definitions upon webserver restarts.  Internally definitions of type push and pull are stored within the definition store on separate caches allowing the user to have same definition name for both the types.  Logging in JRest is through log4j, enabling the users to integrate a common logging framework across the containers if desired.  JRest also monitors the definition path for any new definitions that are to be uploaded at intervals set on $JREST_REFRESH_INTERVAL. The number of database connections that JRest opens can be limited through $JREST_DB_MAX_CONNECTIONS.  However, apart from JREST_DEFINITION_PATH rest all are optional. 
@@ -97,17 +83,19 @@ The AUTH query is expected to return roles that are assigned to the user either 
 
 Once the authentication and database access is specified for JRest, publishing the RWS is quite easy. The following table summarizes two such sample definitions.  The positional parameters specified by “?” are replaced with the values supplied through request header when a JRest RWS is called.  These values must be passed as JSON strings with position numbers and values for the header param key JSON_DATA within header param.  For example  “get_user_details” definitions JSON_DATA must be {“1”:”xys”}. 
 
-To support custom business logic code in any application, JRest offers two execution hooks, Before and After; user can call a regular Java public method of a class before or after or both, while invoking JRest RWS. The extra data that are to be passed to these APIs can packed on to same JSON_DATA as extra offsets.
+# Custom business logic!
+Not everything in web application is SQL and GET/SET operations on the table. To support custom business logic code in any application, JRest offers two execution hooks, Before and After; user can call a regular Java public method of a class before or after or both, while invoking JRest RWS. The extra data that are to be passed to these APIs can packed on to same JSON_DATA as extra offsets.
 
 Before API consumes a request parameter’s data and may produce a result that JRest RWS may consume. “Consume” key set to true for Before implies that JRest RWS should consume the output of the Java API configured in “Before”, else original data is passed as is to RWS. “After” API receives 3 set of data for its operation; the original JSON_DATA, output from Before call if used, and output of JRest RWS. 
 
 The final response JSON is emitted by “After” API.  This mandates the API design for Before call to have single String parameter and After API design three String parameters. The following figure shows the internal execution path taken by JRest, wherein, ip represents input data and RS represents result set.
 Since JRest ties all the definitions to a single database given in the jrest.json, different projects having varied databases or access rights must host JRest in separate instances of webserver.
 
-# Evidence the solution works
-JRest has been open sourced under MIT license and is known to be used by couple of organizations.  JRest seemingly has reduced effort to develop and publish RWS by a factor of 5 – 10 times.
+# License
+JRest has been open sourced under MIT license.
 
-The biggest advantage with JRest against any other solution is its low RAM footprint and O(1) load and execute time for a definition. In a typical RWS environment, all the class files that are loaded to the webserver occupy GBs of memory thus increasing the GC activity; on the other hand JRest uses execution pool and executors to which requests are dynamically injected with the definition that lower RAM need.  Our early assessment project that was ported from traditional Jersey RWS to JRest lowered the memory requirement from ~700MB to 64MB.
+# Benefits
+The biggest advantage with JRest against any other solution is its low RAM footprint and O(1) load and execute time for a definition. In a typical RWS environment, all the class files that are loaded to the webserver occupy GBs of memory thus increasing the GC activity; on the other hand JRest uses execution pool and executors to which requests are dynamically injected with the definition that lower RAM need.  Our early assessment project that was ported from traditional Jersey RWS to JRest lowered the memory requirement from ~1.7GB to 128MB, and super low GC activity.
 
 # Competitive approaches
 Most of the competitive approaches are developed in a style to auto generate the necessary RWS code. Such solutions tend to become complex over a period of time.  JRest offers extremely simple solution in this angle. Changes to definitions too are reflected almost instantaneously by placing new definition files  in JREST_DEFINITION_PATH.
