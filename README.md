@@ -20,30 +20,32 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
 5. Set an environment variable by the name <b>JREST_DEFINITION_PATH</b> to any of your favorite path. Depending on your platform you may need to reopen/restart the shell/command prompt
 6. To work with Oracle and Sql Server you need to have their jdbc drivers installed and accessible on <b>CLASSPATH</b>.
 7. Make sure you have/create a table called User on your database, with username and password columns present in them.
-8. Now move into JREST_DEFINITION_PATH, and open a new file jrest.json in edit mode, and fill in the details given below (replace the values accordingly)
+8. Now move into JREST_DEFINITION_PATH, and open a new file jrest.json in edit mode, and fill in the details given below (replace the values accordingly)<br>
     {
-        "AUTH":{
-              "Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"
-        }
+    "AUTH":{
+        "Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"
+    }
     }
     !
     {
         "JDBC": {
-                "Host":"<hostname>",
-                "Port":"<database port>",
-                "User":"<username>",
-                "Pass":"<password>",
-                "Db"  :"<database/schema name>",
-                "Type":"MySql/PostgreSql/SQLServer/Oracle"
+            "Host":"<hostname>",
+            "Port":"<database port>",
+            "User":"<username>",
+            "Pass":"<password>",
+            "Db"  :"<database/schema name>",
+            "Type":"MySql/PostgreSql/SQLServer/Oracle"
         }
     }
-9. Now open another file users.json in edit mode in JREST_DEFINITION_PATH and put the contents given below <br>
+    
+9. Now open another file users.json in edit mode in JREST_DEFINITION_PATH and put the contents given below
     {
         "Users" : {
             "Query" : "Select username, name, password From User;",
             "Type" : "GET"
         }
     }
+    
 10. Now start your web server or execute mvn jetty:run on the shell prompt (you must be inside the j-rest directory where you have uncompressed the JRest source) <br>
 11. Observe the output of web server; your definition files must have loaded successfully. Your output should be something similar to following
     2013-02-10 16:23:00,705 [Thread-6] DEBUG org.aprilis.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [UA4] <br>
