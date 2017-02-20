@@ -1,7 +1,9 @@
 # JSON + RESTful = JRest 
-Is a Meta programming language which converts the intentions of data access and manipulation against a database table in the form of SQL statement into key based RESTful service.  JRest makes a complete departure from the standards of the RESTful services, as there are no URI to publish by the user! Entire JRest revolves around three types of URIs, /login, /pull, /push.  
+Is a Meta programming language which converts the intentions of data access and manipulation against a database table in the form of SQL statement into key based RESTful service.  JRest makes a complete departure from the standards of the RESTful services, as there are no URI to publish by the user! Entire JRest revolves around these types of URIs, /login, /pull, /push, /iterative/pull, and /iterative/push.  
 
-RESTful services paradigm stands out in the current trend and many a frameworks have been put in place for the same.  In a typical application or service, 70 to 80 percent of the code is written just to make IO operations to one or other database; this leads into very tedious and monotonus development process often time consuming and error prone that JRest addresses very effectively. Using JRest, the time taken to publish a RESTful web service is pretty much equal to the time taken to write the SQL query for the same.
+RESTful services paradigm stands out in the current trend and many a frameworks have been put in place for the same.  In a typical application or service, 70 to 80 percent of the code is written just to make IO operations to one or other database; this leads into very tedious and monotonus development process often time consuming and error prone. Using JRest, the time taken to publish a RESTful web service is pretty much equal to the time taken to write the SQL query for the same.
+
+Further, JRest is offers inline updation to RESTful services.  What this means is that you as a developer, don't have to restart the webserver everytime you add or modify a REST API!
 
 # The Problem 
 In a typical web based application development, much of the time is spent in developing CRUD (Create, Read, Update, Delete) APIs for the database tables.  This itself amounts to almost eighty percent of the code base for any application, quite often a repeatative task, however a great deal of time would be spent in publishing a stable code base for the same.  On the other hand, providing these RESTful Web Service (RWS) securely and implementing a role based access takes a great deal of time.
@@ -20,11 +22,11 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
 5. Set an environment variable by the name <b>JREST_DEFINITION_PATH</b> to any of your favorite path. Depending on your platform you may need to reopen/restart the shell/command prompt
 6. To work with Oracle and Sql Server you need to have their jdbc drivers installed and accessible on <b>CLASSPATH</b>.
 7. Make sure you have/create a table called User on your database, with username and password columns present in them.
-8. Now move into JREST_DEFINITION_PATH, and open a new file jrest.json in edit mode, and fill in the details given below (replace the values accordingly)<br>
-    {
-    "AUTH":{
-        "Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"
-    }
+8. Now move into JREST_DEFINITION_PATH, and open a new file jrest.json in edit mode, and fill in the details given below (replace the values accordingly)
+    `{
+        "AUTH":{
+            "Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"
+        }
     }
     !
     {
@@ -36,7 +38,7 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
             "Db"  :"<database/schema name>",
             "Type":"MySql/PostgreSql/SQLServer/Oracle"
         }
-    }
+    }`
     
 9. Now open another file users.json in edit mode in JREST_DEFINITION_PATH and put the contents given below
     {
@@ -69,9 +71,9 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
 16. There you go! You have successfully interacted with your webserver using j-rest.  <br>
 17. On the same lines, execute other definitions. The information needed in case of definitions other than AUTH is that the HTTP request should contain the following information in the Header params <br>
     {
-    JREST_KEY : Definition key
-    SESSION_KEY : Session key received from login HTTP request
-    JSON_DATA : Any JSON data required by the definition
+        JREST_KEY : Definition key
+        SESSION_KEY : Session key received from login HTTP request
+        JSON_DATA : Any JSON data required by the definition
     }
 
 # Design and Philosophy 
