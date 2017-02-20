@@ -23,38 +23,33 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
 6. To work with Oracle and Sql Server you need to have their jdbc drivers installed and accessible on <b>CLASSPATH</b>.
 7. Make sure you have/create a table called User on your database, with username and password columns present in them.
 8. Now move into JREST_DEFINITION_PATH, and open a new file jrest.json in edit mode, and fill in the details given below (replace the values accordingly)
-	{
-	
-		"AUTH" : {
-			"Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"
+
+		{
+			"AUTH" : {
+				"Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"
+			}
 		}
-		
-	}
-	!
-	{
-	
-		"JDBC" : {
-			"Host" : "<hostname>",
-			"Port" : "<database port>",
-			"User" : "<username>",
-			"Pass" : "<password>",
-			"Db"   : "<database/schema name>",
-			"Type" : "MySql/PostgreSql/SQLServer/Oracle"
+		!
+		{
+			"JDBC" : {
+				"Host" : "<hostname>",
+				"Port" : "<database port>",
+				"User" : "<username>",
+				"Pass" : "<password>",
+				"Db"   : "<database/schema name>",
+				"Type" : "MySql/PostgreSql/SQLServer/Oracle"
+			}
 		}
-	
-	}
 9. Now open another file users.json in edit mode in JREST_DEFINITION_PATH and put the contents given below
-    {
-	
-        "Users" : {
-            "Query" : "Select username, name, password From User;",
-            "Type" : "GET"
-        }
-    
-	}
+
+		{
+	        "Users" : {
+				"Query" : "Select username, name, password From User;",
+				"Type" : "GET"
+    	    }
+   		}
 10. Now start your web server or execute mvn jetty:run on the shell prompt (you must be inside the j-rest directory where you have uncompressed the JRest source) <br>
 11. Observe the output of web server; your definition files must have loaded successfully. Your output should be something similar to following
-	{
 	
 		2013-02-10 16:23:00,705 [Thread-6] DEBUG org.aprilis.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [UA4]
 		2013-02-10 16:23:00,707 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"AUTH":{"Query":"Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);"}}]
@@ -71,21 +66,16 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
 		class org.aprilis.jrest.push.Push 
 		class org.aprilis.jrest.auth.Authentication 
 	
-	}
-	
 12. Make sure you have Postman plugin for Google Chrome or REST Client extension for Firefox; this is needed to test the REST service. <br>
 13. Create a HTTP POST request with the URL http://localhost:8080/jrest/login and pass the authentication details in Header params with JSON_DATA as the key and {"1":"d", "2":"d"} as the value. <br>
 14. Pay attention to the header parameters; we have placed {"1":"d", "2":"d"} as JSON_DATA for the call. 1 and 2 in the actual JSON data represents the positions on the Query given as part of AUTH string ("Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);". The value "d" of key "1" is supplemented to username and "d" (another 'd') of key "2" is supplemented password of the SQL statement. <br>
 15. You should also get a session key of length 32 bytes as a reply to login; we need that key for every other call that we are going to make for JRest, keep it copied to some place.  <br>
 16. There you go! You have successfully interacted with your webserver using j-rest.  <br>
 17. On the same lines, execute other definitions. The information needed in case of definitions other than AUTH is that the HTTP request should contain the following information in the Header params <br>
-    {
-	
-        JREST_KEY : Definition key
-        SESSION_KEY : Session key received from login HTTP request
-        JSON_DATA : Any JSON data required by the definition
-    
-	}
+
+		JREST_KEY : Definition key
+		SESSION_KEY : Session key received from login HTTP request
+		JSON_DATA : Any JSON data required by the definition
 	
 # Design and Philosophy 
 JRest consists of a meta language compiler, session manager, execution engine, definition store and offers three types of HTTP interactions (auth, pull and push). JRest is case sensitive just like C or C++, hence definitions can mean differently with case changed.  Successfully compiled definition files are stored in memory within definition store and also a copy is maintained on the file system which is guided by $JREST_DEFINITION_PATH env variable. This path is used for reloading the definitions upon webserver restarts.  Internally definitions of type push and pull are stored within the definition store on separate caches allowing the user to have same definition name for both the types.  Logging in JRest is through log4j, enabling the users to integrate a common logging framework across the containers if desired.  JRest also monitors the definition path for any new definitions that are to be uploaded at intervals set on $JREST_REFRESH_INTERVAL. The number of database connections that JRest opens can be limited through $JREST_DB_MAX_CONNECTIONS.  However, apart from JREST_DEFINITION_PATH rest all are optional. 
