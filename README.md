@@ -23,22 +23,22 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
 6. To work with Oracle and Sql Server you need to have their jdbc drivers installed and accessible on <b>CLASSPATH</b>.
 7. Make sure you have/create a table called User on your database, with username and password columns present in them.
 8. Now move into JREST_DEFINITION_PATH, and open a new file jrest.json in edit mode, and fill in the details given below (replace the values accordingly)
-	{
-		"AUTH" : {
-			"Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"
-		}
-	}
-	!
-	{
-		"JDBC" : {
-			"Host" : "<hostname>",
-			"Port" : "<database port>",
-			"User" : "<username>",
-			"Pass" : "<password>",
-			"Db"   : "<database/schema name>",
-			"Type" : "MySql/PostgreSql/SQLServer/Oracle"
-		}
-	}
+	<br>`{<br>
+		"AUTH" : {<br>
+			"Query":"Select -3022 From User Where username = ? and password = PASSWORD(?);"<br>
+		}<br>
+	}<br>
+	!<br>
+	{<br>
+		"JDBC" : {<br>
+			"Host" : "<hostname>",<br>
+			"Port" : "<database port>",<br>
+			"User" : "<username>",<br>
+			"Pass" : "<password>",<br>
+			"Db"   : "<database/schema name>",<br>
+			"Type" : "MySql/PostgreSql/SQLServer/Oracle"<br>
+		} </br>
+	}`</br>
 9. Now open another file users.json in edit mode in JREST_DEFINITION_PATH and put the contents given below
     {
         "Users" : {
