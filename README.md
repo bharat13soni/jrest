@@ -102,7 +102,7 @@ Since JRest ties all the definitions to a single database given in the jrest.jso
 JRest has been open sourced under MIT license.
 
 # Benefits
-The biggest advantage with JRest against any other solution is its low RAM footprint and O(1) load and execute time for a definition. In a typical RWS environment, all the class files that are loaded to the webserver occupy GBs of memory thus increasing the GC activity; on the other hand JRest uses execution pool and executors to which requests are dynamically injected with the definition that lower RAM need.  Our early assessment project that was ported from traditional Jersey RWS to JRest lowered the memory requirement from ~1.7GB to 128MB, and super low GC activity.
+The biggest advantage with JRest against any other solution is developers don't have to write RESTful services spending loads of time. Other benefits include its low RAM footprint and O(1) load and execute time for a definition. In a typical RWS environment, all the class files that are loaded to the webserver occupy GBs of memory thus increasing the GC activity; on the other hand JRest uses execution pool and executors to which requests are dynamically injected with the definition that lower RAM need.  Our early assessment project that was ported from traditional Jersey RWS to JRest lowered the memory requirement from ~1.7GB to 128MB, and super low GC activity.
 
 # Competitive approaches
 Most of the competitive approaches are developed in a style to auto generate the necessary RWS code. Such solutions tend to become complex over a period of time.  JRest offers extremely simple solution in this angle. 
