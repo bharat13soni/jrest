@@ -98,6 +98,34 @@ Before API consumes a request parameter’s data and may produce a result that J
 The final response JSON is emitted by “After” API.  This mandates the API design for Before call to have single String parameter and After API design three String parameters. The following figure shows the internal execution path taken by JRest, wherein, ip represents input data and RS represents result set.
 Since JRest ties all the definitions to a single database given in the jrest.json, different projects having varied databases or access rights must host JRest in separate instances of webserver.
 
+	{
+		"UA3" : {
+			"Query" : "Select username, name, password From Darwin.User;",
+			"Type" : "GET",
+			"After" : {
+				"FQCN" : "org.aprilis.sample.TestBeforeAfter",
+				"Method" : "sayHelloAfter"
+			}
+		}
+	}
+	!
+	{
+		"UA4" : {
+			"Query" : "Select username, name, password From Darwin.User;",
+			"Type" : "GET",
+			"Before" : {
+				 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+				 "Method" : "sayHelloBefore",
+				 "Consume" : "t"
+			},
+			"After" : {
+				 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+				 "Method" : "sayHelloAfter"
+			}
+		}
+	}
+
+
 # License
 JRest has been open sourced under MIT license.
 
