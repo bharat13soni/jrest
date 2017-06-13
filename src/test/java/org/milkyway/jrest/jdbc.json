@@ -1,0 +1,11 @@
+{
+	
+	"JDBC":{
+		"Host":"localhost",
+		"Port":"3306",
+		"User":"root",
+		"Pass":"xmc4vhcf",
+		"Db":"Darwin",
+		"Type":"MySql"
+	}
+}
