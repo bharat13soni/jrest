@@ -5,10 +5,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -47,6 +47,8 @@ public class Constants {
    * ignores files without this extension from processing.
    */
   public static final String gsDefFileExtension = ".json";
+
+  public static final String gsSessionTimeoutInterval = "JREST_SESSION_TIMEOUT_INTERVAL";
 
   /**
    * The delimiter character that can be used to separate multiple definitions
@@ -202,6 +204,8 @@ public class Constants {
   public static final char gcDelimColon = ':';
   public static final char gcDelimSemiColon = ';';
 
+  public static final String gsDelimComma = ",";
+
   /**
    * The name of the base definition file in which JREST looks for
    * authentication and JDBC related information. If those details are not
@@ -210,6 +214,15 @@ public class Constants {
    * shutdown mode.
    */
   public static final String gsJrestDefinitionFileName = "jrest.json";
+
+  /**
+   * The name of the file that contains the JRest users who can access the JRest
+   * for grab, publish, settings and other APIs which are specific to JRest
+   * progressive compiler. These users have no relationship with normal JRest
+   * RESTFul services users, however both share same method of the session key
+   * and JRest automatically takes care of figuring out the authentication.
+   */
+  public static final String gsJrestUsersFileName = "jrest-users.json";
 
   /**
    * Minimum length of any Query string given within the definition file.
@@ -265,7 +278,7 @@ public class Constants {
    * Constant for One
    */
   public static final short gshOne = 1;
-  
+
   /**
    * Default number of max allowed database connections that the JREST is
    * allowed to pool itself with, if the guidline from developer is not set as
@@ -279,13 +292,14 @@ public class Constants {
    * definitions in such mode.
    */
   public static final short gshDefaultRoleId = -3022;
+  public static final String gsDefaultRoleId = "-3022";
 
   /**
    * Maximum allowed idle time of any resource within the jrest execution
    * environment. This value is consumed by Compiler, Interpreter and
    * ExecutionEngine for evaluating resource locking.
    */
-  public static final long glSessionIdleTime = ( 30 * 60 * 1000 );
+  public static final long glSessionIdleTime = ( 15 * 60 * 1000 );
 
   /**
    * Keyword definition for hostname as part of connection json string within
@@ -362,8 +376,7 @@ public class Constants {
    * supported database
    */
   public static final String gsConnectionStringFormat = "jdbc:%s://%s:%s/%s?user=%s&password=%s&"
-	  + "failOverReadOnly=false&maxReconnects=10000&useSSL=false&userUnicode=yes&allowMultiQueries=true&"
-	  + "useFastDateParsing=true&useFastIntParsing=true&useJvmCharsetConverters=true&useDirectRowUnpack=true";
+	  + "autoReconnect=true&failOverReadOnly=false&maxReconnects=10000&useSSL=false&allowMultiQueries=true";
 
   /**
    * SQL Server connection string is different than that of standard JDBC one,
@@ -402,7 +415,7 @@ public class Constants {
   /**
    * 
    */
-  public static final short gshMinJsonDataLength = 9;
+  public static final short gshMinJsonDataLength = 16;
 
   /**
    * 
@@ -424,11 +437,20 @@ public class Constants {
   public static final String JSON_DATA = "JSON_DATA";
   public static final String SESSION_KEY = "SESSION_KEY";
   public static final String JREST_KEY = "JREST_KEY";
+  public static final String ADHOC_SQL = "ADHOC_SQL";
   public static final String DEFAULT_JSON_DATA = "DJD";
+  public static final String JREST_KEY_TYPE = "JREST_KEY_TYPE";
+  public static final String JREST_ITERATOR_LIST = "JREST_ITERATOR_LIST";
+  public static final String JREST_ITERATOR_KEY = "JREST_ITERATOR_KEY";
+  public static final String JREST_CRYPTO_KEY = "JREST_CRYPTO_KEY";
+  public static final String JREST_FLIP_BITS = "JREST_FLIP_BITS";
   public static final String NULL = "";
+  public static final String KEY_REGISTER_USER = "register_user";
+  public static final String DEFAULT_FLIP_BITS = "3003";
+  public static final short DISABLE_FLIP_BITS = 3003;
 
   public static final String gsRenameDefinitionFile = "%s%s%";
-  public static final String gsTrimFindeString = "\\n";
+  public static final String gsTrimFindString = "\\n";
   public static final String gsStripCommentLineRegEx = "(?m)^//.*";
   public static final String gsSessionKeyJsonFormat = "{\"sessionkey\" : \"%s\" }";
   public static final String gsEmptyString = "";
@@ -451,6 +473,76 @@ public class Constants {
 
   public static final short gshBufferSize = 4096;
 
+  public static final String gsImageType = "IMG";
+  public static final String gsPDFType = "PDF";
+  public static final String gsEPubType = "EPUB";
+
+  public static final String gsLangDefTypeUpload = "UPLOAD";
+  public static final String gsLangFileType = "FileType";
+  public static final String gsLangFilePath = "Path";
+  public static final String gsLangGenerateFileName = "Generate";
+  public static final String gsYes = "y";
+  public static final String gsNo = "n";
+
+  public static final String gsLangDefTypeDownload = "DOWNLOAD";
+  public static final String gsDownloadPathVariable = "JREST_DOWNLOAD_PATH";
+
   public static final short gshDefTypeSet = 0;
   public static final short gshDefTypeGet = 1;
+  public static final short gshDefTypeDownload = 2;
+  public static final short gshDefTypeUpload = 3;
+  public static final String[] gstDefTypeString = { "GET", "SET", "DOWNLOAD", "UPLOAD" };
+
+  public static final String gsGrabJrestKey = "{\"%s\" : {";
+  public static final String gsGrabQuery = "\"Query\" : \"%s\",";
+  public static final String gsGrabType = "\"Type\" : \"%s\"";
+  public static final String gsGrabBefore = ",\"Before\" : {\"FQCN\" : \"%s\", \"Method\" : \"%s\", \"Consume\" : \"%s\"}";
+  public static final String gsGrabAfter = ",\"After\" : {\"FQCN\" : \"%s\", \"Method\" : \"%s\"}";
+  public static final String gsGrabClose = "}}";
+  public static final String gsGrabRoles = ",\"Roles\" : [%s]";
+
+  public static final String gsPutRoleAsString = "\"%s\",";
+  public static final String gsRemoveSpaceRegEx = "\\s+";
+
+  public static final String gsJrestUserAdmin = "1";
+  public static final String gsJrestUserPower = "2";
+  public static final String gsJrestUserReadOnly = "3";
+
+  public static final String gsLocalAuthUsername = "1";
+  public static final String gsLocalAuthPassword = "2";
+
+  public static final String gsAuthenticationFailed = "INVALID_CREDENTIALS";
+  public static final String gsAuthenticationJson = "{\"sessionkey\": \"%s\"}";
+  public static final String gsNewKeyAssociationJson = "{\"serverkey\": \"%s\"}";
+
+  public static final String gsH2DriverName = "org.h2.Driver";
+  public static final String gsH2DatabaseUrl = "jdbc:h2:%s/jrest;CIPHER=AES;"
+	  + "DB_CLOSE_DELAY=-1;AUTO_RECONNECT=TRUE;AUTO_SERVER=TRUE;CACHE_SIZE=37888";
+  public static final String gsH2UserName = "@JrestRepo30@";
+  public static final String gsH2Password = "19ca348f3ecbc69afc258e53b8824fd2";
+
+  public static final String gsMessageCodeOffset = "7";
+  public static final String gsMessageCodeOffsetDup = "13";
+  public static final String gsMobileNumberOffset = "1";
+  public static final String gsDisplayNameOffset = "5";
+
+  public static final short gshLastBitMask = 224;
+  public static final short gshMidBitMask = 24;
+  public static final short gshFirstBitMask = 7;
+  public static final short gshShiftLength = 5;
+
+  public static final long glMessageCodeLimit = 99999;
+  public static final long glMessageCodeMark = 10000;
+
+  /*
+   * SMS Related declarations go over here
+   */
+  public static final String gsPlivoAuthenticationId = "MAYZK4ZTQ2ZMYXN2I5MZ";
+  public static final String gsPlivoAuthenticationToken = "NWI5NDQzOGZhYTlkOTdlYWE1ZDFlMWY5YjUzN2M1";
+  public static final String gsPlivoLibraryVersion = "v1";
+  public static final String gsPlivoMessageSenderKey = "src";
+  public static final String gsPlivoMessageSenderValue = "+911215211950";
+  public static final String gsPlivoMessageTargetKey = "dst";
+  public static final String gsPlivoMessageTextKey = "text";
+  public static final String gsPlivoMessageBody = "Dear %s your Cards verification code is %s";
 }/* public class Constants */

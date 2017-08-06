@@ -5,10 +5,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -23,11 +23,13 @@ public class Exceptions {
   public static final String gsPathNotDefined = "JREST_DEFINITION_PATH environmental variable is not set";
   public static final String gsPathNotFound = "JREST_DEFINITION_PATH [%s] does not exist";
   public static final String gsLowSweepInterval = "Sweep time is too short; might affect the performance";
+  public static final String gsSweepIntervalLowerThanPermisableLimit = "Sweep time lower than the permisible limit, reseting to 30 secs.";
   public static final String gsParseError = "**** Definition Excluded ****\n"
 	  + "Invalid JSON Definition found in File [%s]"
 	  + "\nJSON Definition Below\n%s\n **** Excluded Info Ends****";
   public static final String gsSessionIsValid = "The session is still valid [%s]";
   public static final String gsSessionIsInValid = "Invalid session identified [%s]";
+  public static final String gsSessionIsInValidMessage = "{\"code\": \"403\"}";
   public static final String gsRolesVerificationPassed = "Roles verification passed for [%s] against [%s]";
   public static final String gsRolesVerificationFailed = "Roles verification failed for [%s] against [%s]";
   public static final String gsFormedSqlQuery = "Generated SQL Query is [%s]";
@@ -40,6 +42,7 @@ public class Exceptions {
   public static final String gsInfoSessionAndJrestKey = "Given Jrest Key is [%s] and Session Key is [%s]";
   public static final String gsGivenToExpectedDataRatio = "Expected number of data fields is "
 	  + "[%d] against Given is [%d]";
+  public static final String gsInfoAdhocSqlAndKey = "Given Session Key is [%s] and AdhocSQL is [%s]";
   public static final String gsBinderMissingDataIndex = "Found missing index [%d] and its value in "
 	  + "given JSON data for Jrest Key [%s] ";
   public static final String gsDmlResultedInVoid = "The DML [%s] issued on the DB had no effect on it.";
@@ -63,6 +66,7 @@ public class Exceptions {
   public static final String gsDefaultRoleAdded = "Default role value [%s] added to JRest Key [%s]";
   public static final String gsTrimmedJsonString = "Trimmed JSON string is [%s]";
   public static final String gsQueryResultedInError = "Query statement associated with JRest Key [%s] resulted in error";
+  public static final String gsSessionVerificationPassed = "JRest session [%s] passed the verification test";
 
   /**
    * The initial state of the string taken by the JRest compiler before it reads
@@ -93,10 +97,10 @@ public class Exceptions {
 	  + "missing mandatory keywords 'Query' or 'Type'";
 
   public static final String gsInvalidDefinitionTypeGiven = "Found wrong access type in the definition file."
-	  + " Valid access types are 'GET' or 'SET'";
+	  + " Valid access types are 'GET' or 'SET' or 'UPLOAD' or 'DOWNLOAD'";
 
   public static final String gsInvalidFunctionNameGiven = "Very short function found; please specify a fully "
-	  + "qualified function name e.g. org.milkyway.jrest.Compiler.PrepareLexTree";
+	  + "qualified function name e.g. org.aprilis.jrest.Compiler.PrepareLexTree";
 
   public static final String gsNullSetOfRolesGiven = "No roles were given for the definition";
 
@@ -113,6 +117,7 @@ public class Exceptions {
 
   public static final String gsInsufficientQueryParamValues = "Insufficient number of parameter "
 	  + "values passed to %s - Expected: %d v/s Actual: %d";
+  public static final String gsMalformedJsonString = "Malformed JSON_DATA %s";
 
   public static final String gsMalformedJsonData = "Unable to process the request. Malformed JSON data"
 	  + " supplied --> %s";
@@ -142,7 +147,7 @@ public class Exceptions {
 
   public static final String gsQueryResultedInNullSetMessage = "JRest Key access resulted in a empty result set";
   public static final String gsQueryResultedInNullSet = "[]";
-  public static final String gsSessionIsInValidMessage = "{\"code\": \"403\",\"sessionkey\": \"%s\"}";
+
   public static final String gsUnknownConsumeValue = "Unknown Use value given. Valid set is t or f";
 
   public static final String gsInvalidMethodNameGiven = "Very short method name provided";
@@ -156,7 +161,7 @@ public class Exceptions {
   public static final String gsMissingMandatoryValuesInAfter = "Values for mandatory keywords FQCN or Method are not defined for JRest Key [%s]";
 
   public static final String gsBeforeMethodFailed = "Execution of configured Before method failed";
-
+  public static final String gsGetKeyFromServerFailed = "Attempt to get association key from server failed";
   public static final String gsAfterMethodFailed = "Execution of configured After method failed";
 
   public static final String gsBeforeMethodOutputIsNull = "Execution of configured Before method resulted in null value that cannot be consumed ";
@@ -177,4 +182,15 @@ public class Exceptions {
   public static final String gsCreateExecutorPool = "Creating executor pool on slot [%d]";
 
   public static final String gsInvalidGenerateValue = "Invalid value given for Generate clause. Valid set is y or n";
+
+  public static final String gsInvalidUploadFileType = "Invlid upload file type given. Valid set is 'IMG'";
+
+  public static final String gsInvalidDownloadFileType = "Invlid download file type given. Valid set is 'PDF'";
+
+  public static final String gsDownloadPathNotConfigured = "Download path not configured. Please configure JREST_DOWNLOAD_PATH to point to a valid directory.";
+
+  public static final String gsDownloadFileNotFound = "Download file not found in JREST_DOWNLOAD_PATH. Please verify if the file exists and JRest has adequate permissions";
+  public static final String gsInvalidJrestKeyTypeForGrab = "Invalid JRest key type given for the definition grab operation";
+
+  public static final String gsInvalidJrestAuthInfo = "The credentials did not match any JRest users on the server. Check your credentials once again or contatct your web-server administrator";
 }/* public class Exceptions */

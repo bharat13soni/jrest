@@ -44,11 +44,11 @@ public class Reflect {
 
 	for( short paramIndex = Constants.gshZero; paramIndex < Constants.gshBeforeMethodParamCount; paramIndex++ ) {
 	  maBeforeMethodParamTypes[paramIndex] = String.class;
-	}// for (short paramIndex = Constants.gshZero; ... )
+	} // for (short paramIndex = Constants.gshZero; ... )
 
 	for( short paramIndex = Constants.gshZero; paramIndex < Constants.gshAfterMethodParamCount; paramIndex++ ) {
 	  maAfterMethodParamTypes[paramIndex] = String.class;
-	}// for (short paramIndex = Constants.gshZero; ... )
+	} // for (short paramIndex = Constants.gshZero; ... )
   }/* public Reflect() */
 
   /**
@@ -86,7 +86,7 @@ public class Reflect {
 	  return msBeforeMethodResult;
 	} else {
 	  mLogger.error( Exceptions.gsReflectNullDefinition );
-	}// if (moDefinition != null)
+	} // if (moDefinition != null)
 
 	return null;
   }/* public String executeBeforeMethod() */
@@ -112,7 +112,7 @@ public class Reflect {
 	  return msAfterMethodResult;
 	} else {
 	  mLogger.error( Exceptions.gsReflectNullDefinition );
-	}// if (moDefinition != null)
+	} // if (moDefinition != null)
 
 	return null;
   }/* public String executeAfterMethod(String restJsonResult) */

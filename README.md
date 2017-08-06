@@ -1,9 +1,29 @@
 # JSON + RESTful = JRest 
-Is a Meta programming language which converts the intentions of data access and manipulation against a database table in the form of SQL statement into key based RESTful service.  JRest makes a complete departure from the standards of the RESTful services, as there are no URI to publish by the user! Entire JRest revolves around these types of URIs, /login, /pull, /push, /iterative/pull, and /iterative/push.  
+Is a Meta programming language which converts the intentions of data access and manipulation against a database table in the form of SQL statement into key based RESTful service.  JRest makes a complete departure from the standards of the RESTful services, as there are no URI to publish by the user! Entire JRest revolves around these types of URIs, /login, /pull, /push, /pull/adhoc and /push/adhoc.
 
 RESTful services paradigm stands out in the current trend and many a frameworks have been put in place for the same.  In a typical application or service, 70 to 80 percent of the code is written just to make IO operations to one or other database; this leads into very tedious and monotonus development process often time consuming and error prone. Using JRest, the time taken to publish a RESTful web service is pretty much equal to the time taken to write the SQL query for the same.
 
 Further, JRest is offers inline updation to RESTful services.  What this means is that you as a developer, don't have to restart the webserver everytime you add or modify a REST API!
+
+# Release 1.1.0
+NEW feature of overriding a definition and adhoc/anonymous querying facility added, based on the feedback/request/idea by @twoxfh.  With v1.1 it is possible to override the earlier formed SQL statement submitted via definition file for the session via ADHOC_SQL paramerter.  This feature is extended to both pull and push services, to access them just add /adhoc to the end of pull or push (e.g. http://localhost:8080/jrest/pull/adhoc or http://localhost:8080/jrest/push/adhoc).
+    Sample GET call header parameters are below, the same is true for a POST (aka SET type of call too)
+
+    SESSION_KEY : 1C79B373DC35B732048DD66FC21669F
+    JREST_KEY   : get_all_groups_for_user
+    JSON_DATA   : {"1":"66e64f0f-9e88-11e6-957c-fc3fdbf9364f"}
+    ADHOC_SQL   : SELECT id, name, members, membercount, createdon, modifiedon FROM groups WHERE uuid = ?;
+
+Overriding helps in replacing the default SQL statement associated with the JREST_KEY momentarially, yet without compromising on the before or after facilities.  Adhoc call does not mandate that there must be a JREST_KEY associated or to be used for the call.  One can simply supply null for the call and get their statement executed on the webserver. An example is listed below, however, remember that supplying JREST_KEY without any value is must otherwise call will return 413 as status code.
+
+    SESSION_KEY : 1C79B373DC35B732048DD66FC21669F
+    JREST_KEY   : <empty-string>
+    JSON_DATA   : {"1":"66e64f0f-9e88-11e6-957c-fc3fdbf9364f"}
+    ADHOC_SQL   : SELECT id, name, members, membercount, createdon, modifiedon FROM groups WHERE uuid = ?;
+
+By allowing to overload SQL associated with JREST_KEY now developers can take advantage of any FCQN java methods associated with a JREST_KEY without ever publishing a definition.  This is great for getting ideas tested quickly. JRest may never publish a override to adhoc in future to support custom Java FCQN function support via before or after due the security implications they pose for the entire system.
+
+PS: PLEASE DO NOT FORGET TO ADD ; (SEMICOLON) AT THE END OF YOUR ADHOC_SQL STATEMENT.
 
 # The Problem 
 In a typical web based application development, much of the time is spent in developing CRUD (Create, Read, Update, Delete) APIs for the database tables.  This itself amounts to almost eighty percent of the code base for any application, quite often a repeatative task, however a great deal of time would be spent in publishing a stable code base for the same.  On the other hand, providing these RESTful Web Service (RWS) securely and implementing a role based access takes a great deal of time.
@@ -51,20 +71,20 @@ JRest has mainly two flavors, full version i.e. authentication and session subsy
 10. Now start your web server or execute mvn jetty:run on the shell prompt (you must be inside the j-rest directory where you have uncompressed the JRest source) <br>
 11. Observe the output of web server; your definition files must have loaded successfully. Your output should be something similar to following
 	
-		2013-02-10 16:23:00,705 [Thread-6] DEBUG org.aprilis.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [UA4]
-		2013-02-10 16:23:00,707 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"AUTH":{"Query":"Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);"}}]
-		2013-02-10 16:23:00,708 [Thread-6] DEBUG org.aprilis.jrest.store.Store - Definition SQL Query is [Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);]
-		2013-02-10 16:23:00,709 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"JDBC":{"Host":"localhost","Port":"3306","User":"root","Pass":"xmc4vhcf","Db":"Darwin","Type":"MySql"}}]
-		2013-02-10 16:23:00,732 [Thread-6] INFO  org.aprilis.jrest.compile.Compile - Trimmed JSON string is[{"Users":{"Query":"Select username, name, password From Darwin.User;","Type":"GET"}}]
-		2013-02-10 16:23:00,733 [Thread-6] DEBUG org.aprilis.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [Users]
+		2013-02-10 16:23:00,705 [Thread-6] DEBUG org.milkyway.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [UA4]
+		2013-02-10 16:23:00,707 [Thread-6] INFO  org.milkyway.jrest.compile.Compile - Trimmed JSON string is[{"AUTH":{"Query":"Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);"}}]
+		2013-02-10 16:23:00,708 [Thread-6] DEBUG org.milkyway.jrest.store.Store - Definition SQL Query is [Select -3022 From Darwin.User Where username = ? and password = PASSWORD(?);]
+		2013-02-10 16:23:00,709 [Thread-6] INFO  org.milkyway.jrest.compile.Compile - Trimmed JSON string is[{"JDBC":{"Host":"localhost","Port":"3306","User":"root","Pass":"xmc4vhcf","Db":"Darwin","Type":"MySql"}}]
+		2013-02-10 16:23:00,732 [Thread-6] INFO  org.milkyway.jrest.compile.Compile - Trimmed JSON string is[{"Users":{"Query":"Select username, name, password From Darwin.User;","Type":"GET"}}]
+		2013-02-10 16:23:00,733 [Thread-6] DEBUG org.milkyway.jrest.compile.Compile - Default role value [[-3022]] added to JRest Key [Users]
 		Feb 10, 2013 4:23:01 PM com.sun.jersey.api.core.PackagesResourceConfig init
 		INFO: Scanning for root resource and provider classes in the packages:
-		org.aprilis.jrest 
+		org.milkyway.jrest 
 		Feb 10, 2013 4:23:02 PM com.sun.jersey.api.core.ScanningResourceConfig logClasses
 		INFO: Root resource classes found:
-		class org.aprilis.jrest.pull.Pull
-		class org.aprilis.jrest.push.Push 
-		class org.aprilis.jrest.auth.Authentication 
+		class org.milkyway.jrest.pull.Pull
+		class org.milkyway.jrest.push.Push 
+		class org.milkyway.jrest.auth.Authentication 
 	
 12. Make sure you have Postman plugin for Google Chrome or REST Client extension for Firefox; this is needed to test the REST service. <br>
 13. Create a HTTP POST request with the URL http://localhost:8080/jrest/login and pass the authentication details in Header params with JSON_DATA as the key and {"1":"d", "2":"d"} as the value. <br>
@@ -103,7 +123,7 @@ Since JRest ties all the definitions to a single database given in the jrest.jso
 			"Query" : "Select username, name, password From Darwin.User;",
 			"Type" : "GET",
 			"After" : {
-				"FQCN" : "org.aprilis.sample.TestBeforeAfter",
+				"FQCN" : "org.milkyway.sample.TestBeforeAfter",
 				"Method" : "sayHelloAfter"
 			}
 		}
@@ -114,12 +134,12 @@ Since JRest ties all the definitions to a single database given in the jrest.jso
 			"Query" : "Select username, name, password From Darwin.User;",
 			"Type" : "GET",
 			"Before" : {
-				 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+				 "FQCN" : "org.milkyway.sample.TestBeforeAfter",
 				 "Method" : "sayHelloBefore",
 				 "Consume" : "t"
 			},
 			"After" : {
-				 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+				 "FQCN" : "org.milkyway.sample.TestBeforeAfter",
 				 "Method" : "sayHelloAfter"
 			}
 		}

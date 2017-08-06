@@ -9,7 +9,7 @@
 		<servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
 		<init-param>
 			<param-name>com.sun.jersey.config.property.packages</param-name>
-			<param-value>org.aprilis.jrest</param-value>
+			<param-value>org.milkyway.jrest</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 
@@ -26,7 +26,7 @@
 	</servlet-mapping>
 
 	<listener>
-		<listener-class>org.aprilis.jrest.boot.Bootstrap</listener-class>
+		<listener-class>org.milkyway.jrest.boot.Bootstrap</listener-class>
 	</listener>
 
 	<session-config>

@@ -90,6 +90,35 @@ public class QueryBinder {
 
   /**
    * 
+   * @param jrestDefiniton
+   * @param sJsonData
+   * @return
+   */
+  public String buildQueryForKey(Definition jrestDefiniton, String sJsonData) {
+	if( jrestDefiniton != null ) {
+	  moDefinition = jrestDefiniton;
+
+	  msDefinitionQuery = moDefinition.getQuery();
+
+	  mLogger.debug( String.format( Exceptions.gsDefinitionQuery, msDefinitionQuery ) );
+
+	  if( sJsonData != null ) {
+		String sTrimmedJsonData = sJsonData.trim();
+
+		if( ( sTrimmedJsonData.length() > 0 )
+			&& ( sTrimmedJsonData.equals( Constants.DEFAULT_JSON_DATA ) == false ) ) {
+		  return bindParamsAndBuildQuery( sTrimmedJsonData );
+		}// if ((sTrimmedJsonData.length() > 0) ... )
+	  }// if (sJsonData != null)
+
+	  return msDefinitionQuery;
+	}// if( jrestDefiniton != null )
+
+	return null;
+  }// public String buildQueryForKey(Definition jrestDefiniton, ... )
+
+  /**
+   * 
    * @param sJsonData
    * @return
    */

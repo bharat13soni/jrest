@@ -67,8 +67,7 @@ public class Bootstrap implements ServletContextListener {
 	String log4jConfigFile = System.getenv( Constants.gsLog4jPropertiesFile );
 
 	// Check if exists a user supplied configuration file, if not use the
-	// default
-	// one that comes bundled with the JRest.
+	// default one that comes bundled with the JRest.
 	if( log4jConfigFile != null && log4jConfigFile.length() > Constants.gshZero ) {
 	  PropertyConfigurator.configure( log4jConfigFile );
 	} else {

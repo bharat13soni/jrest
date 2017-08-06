@@ -46,12 +46,12 @@ import org.milkyway.jrest.store.Store;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-@Path("/pull")
-public class Pull {
+@Path("/pull/adhoc")
+public class AdhocPull {
   /**
    * 
    */
-  public Pull() {
+  public AdhocPull() {
 	moExecutor = null;
 	msSqlQuery = null;
 	moResultSet = null;
@@ -65,12 +65,12 @@ public class Pull {
 	moStore = Store.instance();
 	moSessionStore = Session.instance();
 	moExecutionEngine = ExecutionEngine.instance();
-  }/* public Pull() */
+  }/* public AdhocPull() */
 
   /**
    * 
    * @param sessionKey
-   * @param jrestKey
+   * @param adhocSql
    * @param jsonData
    * @return
    */
@@ -78,9 +78,10 @@ public class Pull {
   @GET
   public Response executePull(@HeaderParam(Constants.SESSION_KEY) String sessionKey,
 	  @HeaderParam(Constants.JREST_KEY) String jrestKey,
+	  @HeaderParam(Constants.ADHOC_SQL) String adhocSql,
 	  @DefaultValue(Constants.DEFAULT_JSON_DATA) @HeaderParam(Constants.JSON_DATA) String jsonData) {
 	/*
-	 * 
+	 * Evaluate the system readiness, if not send the response back.
 	 */
 	if( moSessionStore.isSystemInReadyState() == false ) {
 	  mLogger.fatal( Exceptions.gsSystemInHaltState );
@@ -91,11 +92,25 @@ public class Pull {
 
 	try {
 	  mLogger.debug(
-		  String.format( Exceptions.gsInfoSessionAndJrestKey, jrestKey, sessionKey ) );
+		  String.format( Exceptions.gsInfoAdhocSqlAndKey, sessionKey, adhocSql ) );
 
-	  if( sessionKey != null && jrestKey != null ) {
+	  if( sessionKey != null && adhocSql != null ) {
 		if( moSessionStore.isSessionValid( sessionKey ) ) {
-		  Definition jrestDefinition = moStore.getDefinition( jrestKey, true );
+		  Definition jrestDefinition = null;
+
+		  /*
+		   * If the definition is given we inherit it, this enables us to retain
+		   * the before and after methods for the adhoc sql. if not then it
+		   * simply is just a adhoc query that doesn't need any before or after
+		   * methods. Doing this also enables us to inherit any JREST definiton
+		   * and change the SQL dynamically.
+		   */
+		  if( jrestKey != null ) {
+			jrestDefinition = moStore.getDefinition( jrestKey, true );
+		  } else {
+			jrestDefinition = new Definition();
+			jrestDefinition.addRole( Constants.gsDefaultRoleId );
+		  }
 
 		  if( jrestDefinition != null ) {
 			HashSet< String > hsetApiRoles = jrestDefinition.getRoles();
@@ -107,9 +122,11 @@ public class Pull {
 			moResultSet = null;
 			moResultMetaData = null;
 
+			jrestDefinition.setQuery( adhocSql );
+
 			if( moSessionStore.isRoleSetValid( sessionKey, hsetApiRoles ) ) {
 			  mLogger.debug( String.format( Exceptions.gsRolesVerificationPassed,
-				  sessionKey, jrestKey ) );
+				  sessionKey, Constants.ADHOC_SQL ) );
 
 			  moReflect.setDefinition( jrestDefinition );
 			  moReflect.setRestJsonData( jsonData );
@@ -130,8 +147,8 @@ public class Pull {
 				   */
 				  if( jrestDefinition.useResultFromBefore() == true ) {
 					if( sBeforeMethodResult != null ) {
-					  msSqlQuery = moQueryBinder.buildQueryForKey( jrestKey,
-						  sBeforeMethodResult, Constants.gshDefTypeGet );
+					  msSqlQuery = moQueryBinder.buildQueryForKey( jrestDefinition,
+						  sBeforeMethodResult );
 					} else {
 					  mLogger.error( Exceptions.gsBeforeMethodOutputIsNull );
 
@@ -140,9 +157,9 @@ public class Pull {
 					} // if (sBeforeMethodResult != null)
 				  } else {
 					// Do not consume output of Before method
-					msSqlQuery = moQueryBinder.buildQueryForKey( jrestKey, jsonData,
-						Constants.gshDefTypeGet );
-				  } // if (jrestDefinition.useResultFromBefore() == true)
+					msSqlQuery = moQueryBinder.buildQueryForKey( jrestDefinition,
+						jsonData );
+				  } // if(jrestDefinition.useResultFromBefore() == true)
 				} catch( Exception e ) {
 				  mLogger.error( Exceptions.gsBeforeMethodFailed );
 
@@ -157,8 +174,7 @@ public class Pull {
 				 * If before method was not configured, the original Json data
 				 * is passed to the QueryBinder.
 				 */
-				msSqlQuery = moQueryBinder.buildQueryForKey( jrestKey, jsonData,
-					Constants.gshDefTypeGet );
+				msSqlQuery = moQueryBinder.buildQueryForKey( jrestDefinition, jsonData );
 			  } // if (jrestDefinition.getFqcnBefore() != null)
 
 			  if( msSqlQuery == null ) {
@@ -166,15 +182,14 @@ public class Pull {
 
 				return Response.status( HttpCodes.UNPROCESSABLE_ENTITY )
 					.entity( Exceptions.gsUnProcessableQuery ).build();
-			  } // if (msSqlQuery == null)
-
-			  mLogger.debug( msSqlQuery );
+			  }
 
 			  // Acquire executor handle from the pool engine
 			  moExecutor = moExecutionEngine.acquireExecutorFromPool();
 
 			  if( moExecutor != null ) {
-				// Trigger the query and check whether it was successful or
+				// Trigger the query and check whether it was
+				// successful or
 				// not
 				mLogger.debug( String.format( Exceptions.gsFormedSqlQuery, msSqlQuery ) );
 				moResultSet = moExecutor.executeQuery( msSqlQuery );
@@ -204,7 +219,7 @@ public class Pull {
 					} // for (short columnIndex = ... )
 
 					jsonResultSet.add( jsonRow );
-				  }// while( moResultSet.next() )
+				  } // while( moResultSet.next() )
 
 				  moResultSet.close();
 				  moExecutionEngine.releaseExecutorToPool( moExecutor );
@@ -237,7 +252,8 @@ public class Pull {
 						  .entity( Exceptions.gsAfterMethodFailed ).build();
 					} // end of try .. catch block
 
-				  } // if (jrestDefinition.getFqcnAfter() != null)
+				  } // if (jrestDefinition.getFqcnAfter() !=
+				    // null)
 
 				  return Response.status( HttpCodes.OK )
 					  .entity( jsonResultSet.toJSONString() ).build();
@@ -251,7 +267,8 @@ public class Pull {
 				return Response.status( HttpCodes.SERVICE_UNAVAILABLE )
 					.entity( Exceptions.gsNoFreeExecutorsAvailable ).build();
 			  } // if (moExecutor != null)
-			} // if (moSessionStore.isRoleSetValid(sessionKey, hsetApiRoles))
+			} // if (moSessionStore.isRoleSetValid(sessionKey,
+			  // hsetApiRoles))
 
 			mLogger.error( String.format( Exceptions.gsRolesVerificationFailed,
 				sessionKey, jrestKey ) );
@@ -259,7 +276,10 @@ public class Pull {
 			return Response.status( HttpCodes.FORBIDDEN ).entity( String
 				.format( Exceptions.gsRolesVerificationFailed, sessionKey, jrestKey ) )
 				.build();
-		  }// if (jrestDefinition != null)
+		  } // if (jrestDefinition != null)
+
+		  // Mark for GC pro-actively
+		  jrestDefinition = null;
 
 		  mLogger.error( String.format( Exceptions.gsNoDefinitionFound, jrestKey ) );
 
@@ -274,7 +294,7 @@ public class Pull {
 			.status( HttpCodes.FORBIDDEN ).entity( String
 				.format( Exceptions.gsSessionIsInValidMessage, sessionKey ).toString() )
 			.build();
-	  } // if (sessionKey != null && jrestKey != null)
+	  } // if( sessionKey != null && adhocSql != null )
 	} catch( Exception e ) {
 	  e.printStackTrace( moPrintWriter );
 
@@ -351,7 +371,7 @@ public class Pull {
   /*
    * The logging handle for the system get the log files done.
    */
-  private static Logger mLogger = Logger.getLogger( Pull.class.getCanonicalName() );
+  private static Logger mLogger = Logger.getLogger( AdhocPull.class.getCanonicalName() );
 
   /**
    * 

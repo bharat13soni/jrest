@@ -4,7 +4,7 @@
 		"Query" : "Select username, name, password From Darwin.User;",
 		"Type" : "GET",
 		"After" : {
-					 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+					 "FQCN" : "org.milkyway.sample.TestBeforeAfter",
 					 "Method" : "sayHelloAfter"
 					}
 	}
@@ -18,12 +18,12 @@
 		"Query" : "Select username, name, password From Darwin.User;",
 		"Type" : "GET",
 		"Before" : {
-					 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+					 "FQCN" : "org.milkyway.sample.TestBeforeAfter",
 					 "Method" : "sayHelloBefore",
 					 "Consume" : "t"
 					},
 		"After" : {
-					 "FQCN" : "org.aprilis.sample.TestBeforeAfter",
+					 "FQCN" : "org.milkyway.sample.TestBeforeAfter",
 					 "Method" : "sayHelloAfter"
 					}
 	}

@@ -2,14 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.aprilis.jrest</groupId>
+	<groupId>org.milkyway.jrest</groupId>
 	<artifactId>jrest</artifactId>
 	<packaging>war</packaging>
-	<name>JRest Automatic Services</name>
-	<url>http://maven.apache.org</url>
+	<name>JRest Meta Programming Language</name>
+	<url>https://github.com/ssharish/jrest</url>
 
 	<!-- Change the version here for every build -->
-	<version>0.1.0</version>
+	<version>1.1.0</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

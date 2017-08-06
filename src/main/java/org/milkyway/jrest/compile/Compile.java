@@ -286,7 +286,7 @@ public class Compile extends Thread {
 	try {
 	  String commentsStrippedJson = sJsonDef
 		  .replaceAll( Constants.gsStripCommentLineRegEx, Constants.gsEmptyString );
-	  String newLineTrimmedJson = commentsStrippedJson.replaceAll( Constants.gsTrimFindeString,
+	  String newLineTrimmedJson = commentsStrippedJson.replaceAll( Constants.gsTrimFindString,
 		  Constants.gsEmptyString );
 	  String spaceRemovedJson = newLineTrimmedJson
 		  .replaceAll( Constants.gsRemoveSpacesExcludingQuotes, Constants.gsEmptyString );
@@ -452,7 +452,7 @@ public class Compile extends Thread {
 	  String commentsStrippedJson = sJsonDef
 		  .replaceAll( Constants.gsStripCommentLineRegEx, Constants.gsEmptyString );
 	  String newLineTrimmedJson = commentsStrippedJson
-		  .replaceAll( Constants.gsTrimFindeString, Constants.gsEmptyString );
+		  .replaceAll( Constants.gsTrimFindString, Constants.gsEmptyString );
 	  String spaceRemovedJson = newLineTrimmedJson
 		  .replaceAll( Constants.gsRemoveSpacesExcludingQuotes, Constants.gsEmptyString );
 
