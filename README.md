@@ -6,7 +6,7 @@ RESTful services paradigm stands out in the current trend and many a frameworks 
 Further, JRest is offers inline updation to RESTful services.  What this means is that you as a developer, don't have to restart the webserver everytime you add or modify a REST API!
 
 # Release 1.1.0
-NEW feature of overriding a definition and adhoc/anonymous querying facility added, based on the feedback/request/idea by @twoxfh.  With v1.1 it is possible to override the earlier formed SQL statement submitted via definition file for the session via ADHOC_SQL paramerter.  This feature is extended to both pull and push services, to access them just add /adhoc to the end of pull or push (e.g. http://localhost:8080/jrest/pull/adhoc or http://localhost:8080/jrest/push/adhoc).
+NEW! overriding definition and adhoc/anonymous querying facility added based on the feedback/request/idea by @twoxfh.  With v1.1 it is possible to override SQL statement submitted via definition file ADHOC_SQL paramerter momentarily.  This feature is extended to both pull and push services, to access them just add /adhoc to the end of pull or push (e.g. http://localhost:8080/jrest/pull/adhoc or http://localhost:8080/jrest/push/adhoc).
     Sample GET call header parameters are below, the same is true for a POST (aka SET type of call too)
 
     SESSION_KEY : 1C79B373DC35B732048DD66FC21669F
@@ -14,7 +14,7 @@ NEW feature of overriding a definition and adhoc/anonymous querying facility add
     JSON_DATA   : {"1":"66e64f0f-9e88-11e6-957c-fc3fdbf9364f"}
     ADHOC_SQL   : SELECT id, name, members, membercount, createdon, modifiedon FROM groups WHERE uuid = ?;
 
-Overriding helps in replacing the default SQL statement associated with the JREST_KEY momentarially, yet without compromising on the before or after facilities.  Adhoc call does not mandate that there must be a JREST_KEY associated or to be used for the call.  One can simply supply null for the call and get their statement executed on the webserver. An example is listed below, however, remember that supplying JREST_KEY without any value is must otherwise call will return 413 as status code.
+Overriding helps in replacing the default SQL statement associated with the JREST_KEY momentarily, yet without compromising on the before or after facilities.  Adhoc call does not mandate that there must be a JREST_KEY associated or to be used for the call.  One can simply supply null for the call and get their statement executed on the webserver. An example is listed below, however, remember that supplying JREST_KEY without any value is must otherwise call will return 413 as status code.
 
     SESSION_KEY : 1C79B373DC35B732048DD66FC21669F
     JREST_KEY   : <empty-string>
@@ -24,6 +24,8 @@ Overriding helps in replacing the default SQL statement associated with the JRES
 By allowing to overload SQL associated with JREST_KEY now developers can take advantage of any FCQN java methods associated with a JREST_KEY without ever publishing a definition.  This is great for getting ideas tested quickly. JRest may never publish a override to adhoc in future to support custom Java FCQN function support via before or after due the security implications they pose for the entire system.
 
 PS: PLEASE DO NOT FORGET TO ADD ; (SEMICOLON) AT THE END OF YOUR ADHOC_SQL STATEMENT.
+
+One more thing! Now to use JRest simply download the jrest.war file under the war directory of the repository and place it under your webapps directory of tomcat.
 
 # The Problem 
 In a typical web based application development, much of the time is spent in developing CRUD (Create, Read, Update, Delete) APIs for the database tables.  This itself amounts to almost eighty percent of the code base for any application, quite often a repeatative task, however a great deal of time would be spent in publishing a stable code base for the same.  On the other hand, providing these RESTful Web Service (RWS) securely and implementing a role based access takes a great deal of time.
