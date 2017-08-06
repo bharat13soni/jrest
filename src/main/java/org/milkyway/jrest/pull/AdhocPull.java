@@ -105,7 +105,7 @@ public class AdhocPull {
 		   * methods. Doing this also enables us to inherit any JREST definiton
 		   * and change the SQL dynamically.
 		   */
-		  if( jrestKey != null ) {
+		  if( jrestKey != null && jrestKey != Constants.NULL ) {
 			jrestDefinition = moStore.getDefinition( jrestKey, true );
 		  } else {
 			jrestDefinition = new Definition();
