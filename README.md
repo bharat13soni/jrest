@@ -23,7 +23,7 @@ Overriding helps in replacing the default SQL statement associated with the JRES
 
 By allowing to overload SQL associated with JREST_KEY now developers can take advantage of any FCQN java methods associated with a JREST_KEY without ever publishing a definition.  This is great for getting ideas tested quickly. JRest may never publish a override to adhoc in future to support custom Java FCQN function support via before or after due the security implications they pose for the entire system.
 
-PS: PLEASE DO NOT FORGET TO ADD ; (SEMICOLON) AT THE END OF YOUR ADHOC_SQL STATEMENT.
+> PS: PLEASE DO NOT FORGET TO ADD ; (SEMICOLON) AT THE END OF YOUR ADHOC_SQL STATEMENT.
 
 One more thing! Now to use JRest simply download the jrest.war file under the war directory of the repository and place it under your webapps directory of tomcat.
 
